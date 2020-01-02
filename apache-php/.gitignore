@@ -1,0 +1,6 @@
+# Mac Data
+*.DS_Store
+
+
+# Passwords
+.env

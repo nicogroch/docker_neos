@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  web:
+    build: build/docker-image-web
+    image: apache-prd-page
+    container_name: apache-prd-page
+    hostname: apache-prd-page
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - database
+    environment:
+      - APACHE_DOCUMENT_ROOT=/app/Web
+    ports:
+     - 82:80
+    volumes:
+      - /srv/www/page_02_neos/:/app/:rw
+      - /home/www-user:/home/www-user/:rw
+  database:
+    build: build/docker-image-mysql
+    container_name: mysql-database-page
+    hostname: mysql-database-page
+    ports:
+      - 127.0.0.1:3222:3306 # The use of a different port, is for security reasons. Please change to the port you need
+    networks:
+      - backend
+    volumes:
+      - ./volumes/database-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${EXAMIS_DATABASE_NAME}
+      - MYSQL_USER=${EXAMIS_DATABASE_USER}
+      - MYSQL_PASSWORD=${EXAMIS_DATABASE_PASSWORD}
+networks:
+  frontend:
+  backend:
